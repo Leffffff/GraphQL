@@ -1,0 +1,45 @@
+# This file was generated based on ".graphqlconfig". Do not edit manually.
+
+schema {
+    query: Query
+    mutation: Mutation
+}
+
+type BatchSyncTodosResult {
+    updated: [Todo!]
+    added: [Todo!]
+    removed: [Todo!]
+}
+
+input UpdateTodoInput {
+    id: ID!
+    title: String
+    completed: Boolean
+}
+
+type Mutation {
+    addTodo(todo: TodoInput): Todo!
+    removeTodo(id: ID): [Todo]!
+    updateTodo(id: ID): [Todo]!
+    batchSyncTodos(add: [TodoInput!], remove: [ID!], update: [UpdateTodoInput]): BatchSyncTodosResult
+}
+
+type Query {
+    getAllTodos(search: String): [Todo!]!
+}
+
+type Todo {
+    completed: Boolean!
+    id: ID
+    title: String!
+}
+
+input TodoInput {
+    tilte: String!
+}
+
+input TodosInput {
+    completed: Boolean!
+    id: ID
+    title: String!
+}
