@@ -4,8 +4,8 @@
 
 ### Task 1. Hint
 
-To test the `addTodo` mutation run this in console that is available on `localhost:3005/graphql` after you've started the
-server. It returns errors. Why? 🤔
+To test the `addTodo` mutation run the following mutation in the console that is available on `localhost:3005/graphql`
+after you've started the server. It returns errors. Why? 🤔
 
 ```graphql
 mutation {
