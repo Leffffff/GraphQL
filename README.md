@@ -5,7 +5,8 @@
 
 # How to run
 
-npm clean-install npm run start:server
+- npm clean-install 
+- npm run start:server
 
 # How to test
 
