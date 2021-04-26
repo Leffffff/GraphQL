@@ -35,7 +35,7 @@ type Todo {
 }
 
 input TodoInput {
-    tilte: String!
+    title: String!
 }
 
 input TodosInput {

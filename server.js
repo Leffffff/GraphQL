@@ -1,9 +1,9 @@
 const express = require('express');
-const {graphqlHTTP} = require('express-graphql');
+const { graphqlHTTP } = require('express-graphql');
 const cors = require('cors');
-const {buildSchema} = require('graphql');
-const {readFileSync} = require('fs');
-const {nanoid} = require('nanoid');
+const { buildSchema } = require('graphql');
+const { readFileSync } = require('fs');
+const { nanoid } = require('nanoid');
 
 let allTodos = [{
     id: 'first-test-todo',
@@ -11,12 +11,15 @@ let allTodos = [{
     completed: false
 }];
 
-const schemaString = readFileSync('./schema.graphql', {encoding: 'utf8'});
+const schemaString = readFileSync('./schema.graphql', { encoding: 'utf8' });
 
 const schema = buildSchema(schemaString);
 
 const root = {
-    getAllTodos: () => {
+    getAllTodos: (searchString) => {
+        if (searchString) {
+            return allTodos.length === 0 ? [] : allTodos.filter(todo => todo.title.includes(searchString));
+        }
         return allTodos;
     },
 
@@ -31,15 +34,37 @@ const root = {
     },
 
     updateTodo: params => {
-        const todo = allTodos.find(({id}) => params.id === id);
+        const todo = allTodos.find(({ id }) => params.id === id);
         todo.completed = !todo.completed;
         return allTodos;
     },
 
     removeTodo: params => {
-        allTodos = allTodos.filter(({id}) => params.id !== id)
+        allTodos = allTodos.filter(({ id }) => params.id !== id)
         return allTodos;
     },
+    batchSyncTodos: ({ add, remove, update }) => { // rude
+        return {
+            added: add.map(title => {
+                const todo = {
+                    id: nanoid(),
+                    completed: false,
+                    title
+                };
+                allTodos.unshift(todo);
+                return todo;
+            }),
+            removed: remove.map(idToRemove => {
+                allTodos = allTodos.filter(({ id }) => idToRemove !== id)
+                return allTodos;
+            }),
+            updated: update.map(paramToUpdate => {
+                const todo = allTodos.find(({ id }) => paramToUpdate === id);
+                todo.completed = !todo.completed;
+                return allTodos;
+            }),
+        }
+    }
 };
 
 const app = express();
