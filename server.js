@@ -17,7 +17,7 @@ const schema = buildSchema(schemaString);
 
 const root = {
     getAllTodos: (searchString) => {
-        if (searchString) {
+        if (!searchString) {
             return allTodos.length === 0 ? [] : allTodos.filter(todo => todo.title.includes(searchString));
         }
         return allTodos;
@@ -46,6 +46,7 @@ const root = {
     batchSyncTodos: ({ add, remove, update }) => { // rude
         return {
             added: add.map(title => {
+                console.log(removeTodo)
                 const todo = {
                     id: nanoid(),
                     completed: false,
